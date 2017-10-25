@@ -1,9 +1,7 @@
 package nz.burntoast.twlspider;
 
-import java.util.ArrayList;
+import java.util.HashMap;
 
-import org.json.JSONObject;
-import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
 
 public class Main {
@@ -22,9 +20,9 @@ public class Main {
 	
 	public Main() {
 		spider = new Spider();
-		
 		searchCategories();
 	}
+	
 	/**
 	 * go through all the footwear categories on the website searching for all the products
 	 */
@@ -40,7 +38,9 @@ public class Main {
 		System.out.println("DONE | Care");
 		
 		// Condense the information down to what we need
-		ArrayList<Product> products = spider.generateProducts(tiles);
+		HashMap<String, Product> products = spider.generateProducts(tiles);
+		
+		//print amount generated for testing perposes
 		System.out.println(products.size());
 		products.get(0).toString();
 	}

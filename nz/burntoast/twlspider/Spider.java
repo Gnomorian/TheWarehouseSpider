@@ -1,7 +1,7 @@
 package nz.burntoast.twlspider;
 
 import java.io.IOException;
-import java.util.ArrayList;
+import java.util.HashMap;
 
 import org.json.JSONObject;
 import org.jsoup.Jsoup;
@@ -49,14 +49,16 @@ public class Spider {
 		return tiles;
 	}
 	/**
-	 * converts the Elements array into a Product array to remove garbage.
+	 * converts the Elements array into a Product HashMap to remove garbage.
+	 * HashMap key is the id of the product.
 	 * @param tiles
 	 */
-	public ArrayList<Product> generateProducts(Elements tiles) {
-		ArrayList<Product> products = new ArrayList<Product>();
+	public HashMap<String, Product> generateProducts(Elements tiles) {
+		HashMap<String, Product> products = new HashMap<String, Product>();
 		for(int i = 0; i < tiles.size(); i++) {
 			String json = tiles.get(i).attr("data-line-item");
-			products.add(createProduct(json));
+			Product product = createProduct(json);
+			products.put(product.getId(), product);
 		}
 		return products;
 	}
