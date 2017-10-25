@@ -1,7 +1,9 @@
 package nz.burntoast.twlspider;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
+import org.json.JSONObject;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
@@ -45,5 +47,35 @@ public class Spider {
 			e.printStackTrace();
 		}
 		return tiles;
+	}
+	/**
+	 * converts the Elements array into a Product array to remove garbage.
+	 * @param tiles
+	 */
+	public ArrayList<Product> generateProducts(Elements tiles) {
+		ArrayList<Product> products = new ArrayList<Product>();
+		for(int i = 0; i < tiles.size(); i++) {
+			String json = tiles.get(i).attr("data-line-item");
+			products.add(createProduct(json));
+		}
+		return products;
+	}
+	/**
+	 * used to remove the garbage from the information we got from the website, 
+	 * creates a Product class that has all the information we need about a shoe.
+	 * @param json
+	 * @return
+	 */
+	private Product createProduct(String json) {
+		Product product = new Product();
+		JSONObject obj;
+		obj = new JSONObject(json);
+		product.setName(obj.getString("name"));
+		product.setId(obj.getString("id"));
+		product.setPrice(obj.getFloat("price"));
+		product.setBrand(obj.getString("brand"));
+		product.setCategory(obj.getString("category"));
+		
+		return product;
 	}
 }

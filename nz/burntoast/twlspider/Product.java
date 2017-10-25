@@ -11,6 +11,8 @@ public class Product {
 	private float price;
 	// who made the product
 	private String brand;
+	// category of the product, mens hiking shoes?
+	private String category;
 	// variant of the product
 	private String colour;
 	// the barcodes of the different sizes of this product
@@ -63,5 +65,24 @@ public class Product {
 
 	public void setBarcodes(HashMap<Integer, String> barcodes) {
 		this.barcodes = barcodes;
+	}
+	
+	public String getCategory() {
+		return category;
+	}
+
+	public void setCategory(String category) {
+		this.category = category;
+	}
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		sb.append("id : " + id + "\n");
+		sb.append("name : " + name + "\n");
+		sb.append("price : " + price + "\n");
+		sb.append("brand : " + brand + "\n");
+		sb.append("category : " + category + "\n");
+		sb.append("colour : " + colour + "\n");
+		return sb.toString();
 	}
 }
