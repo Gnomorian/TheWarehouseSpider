@@ -1,7 +1,7 @@
 package nz.burntoast.twlspider;
 
-import java.util.HashMap;
-
+import java.io.IOException;
+import java.util.ArrayList;
 import org.jsoup.select.Elements;
 
 public class Main {
@@ -37,11 +37,26 @@ public class Main {
 		tiles.addAll(spider.getTilesInCategory(CARE));
 		System.out.println("DONE | Care");
 		
-		// Condense the information down to what we need
-		HashMap<String, Product> products = spider.generateProducts(tiles);
+		// Condense the information down to what we need to find the barcodes
+		ArrayList<Product> products = spider.generateProducts(tiles);
 		
-		//print amount generated for testing perposes
-		System.out.println(products.size());
-		products.get(0).toString();
+		// get objects containing all the shoes including barcodes
+		ArrayList<Shoe> shoes;
+		try {
+			// get the whole list of shoes including their barcodes
+			//TODO: bad name concidering it does everything acording to the main class
+			shoes = spider.getBarcodes(products);
+			System.out.println(shoes.size());
+			Shoe shoe = shoes.get(0);
+			
+			System.out.println("Name: " + shoe.getName());
+			System.out.println("Brand: " + shoe.getBrand());
+			System.out.println("Colour: " + shoe.getColour());
+			System.out.println("Size: " + shoe.getSize());
+			System.out.println("Price: " + shoe.getPrice());
+			System.out.println("Barcode: " + shoe.getBarcode());
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 }

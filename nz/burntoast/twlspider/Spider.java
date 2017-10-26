@@ -1,8 +1,7 @@
 package nz.burntoast.twlspider;
 
 import java.io.IOException;
-import java.util.HashMap;
-
+import java.util.ArrayList;
 import org.json.JSONObject;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -49,16 +48,15 @@ public class Spider {
 		return tiles;
 	}
 	/**
-	 * converts the Elements array into a Product HashMap to remove garbage.
-	 * HashMap key is the id of the product.
+	 * converts the Elements array into a Product ArrayList to remove garbage.
 	 * @param tiles
 	 */
-	public HashMap<String, Product> generateProducts(Elements tiles) {
-		HashMap<String, Product> products = new HashMap<String, Product>();
+	public ArrayList<Product> generateProducts(Elements tiles) {
+		ArrayList<Product> products = new ArrayList<Product>();
 		for(int i = 0; i < tiles.size(); i++) {
 			String json = tiles.get(i).attr("data-line-item");
 			Product product = createProduct(json);
-			products.put(product.getId(), product);
+			products.add(product);
 		}
 		return products;
 	}
@@ -79,5 +77,29 @@ public class Spider {
 		product.setCategory(obj.getString("category"));
 		
 		return product;
+	}
+	
+	/**
+	 * gets all the barcodes of the various products
+	 * @throws IOException 
+	 */
+	public ArrayList<Shoe> getBarcodes(ArrayList<Product> products) throws IOException {
+		// get a list of all the shoes
+		ProductVariations variations = new ProductVariations();
+		ArrayList<Shoe> shoes = variations.getProductVariations(products);
+		Document doc;
+		// find the barcode for each shoe
+		for(int i = 0; i < shoes.size(); i++) {
+			Shoe shoe = shoes.get(i);
+			System.out.println("Getting barcode of " + shoe.getName());
+			// get the page containing the barcode
+			doc = Jsoup.connect(shoes.get(i).getUrl()).get();
+			// get the barcode
+			Elements productIdElement = doc.getElementsByClass("product-id");
+			// set the barcode
+			shoe.setBarcode(productIdElement.get(0).html());
+		}
+		
+		return shoes;
 	}
 }
